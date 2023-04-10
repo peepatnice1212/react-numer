@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: peepatnice1212
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+
+  server:
+    build: ./server
+    ports:
+      - "8800:8800"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: peepatnice1212
+      DB_NAME: nicedb
+      DB_PORT: 3307
+
+  app:
+    build: ./numer
+    ports:
+      - "9999:3000"
+    depends_on:
+      - server
