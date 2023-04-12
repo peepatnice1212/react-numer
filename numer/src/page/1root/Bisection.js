@@ -16,6 +16,7 @@ import {
   Legend,
 } from "chart.js";
 import axios from "axios";
+import { Cal } from "./calbi";
 
 ChartJS.register(
   CategoryScale,
@@ -151,64 +152,17 @@ const Bisection = () => {
   let N;
   const [XL, setXL] = useState(0);
   const [XR, setXR] = useState(0);
-  const data = [];
+  let data = [];
   const error = (xold, xnew) => Math.abs((xnew - xold) / xnew) * 100;
   const regex = /[0-9 \-+*/^()]|sin|sqrt|cos|tan|sec|cosec|cot|pi|log/g;
   let variable = Equation.replace(regex, "");
 
-  const Cal = (xl, xr) => {
-    let fXm, fXr, ea, xm;
-    let iter = 0;
-    const e = 0.00001;
-    let obj = {};
-
-    do {
-      xm = (xl + xr) / 2.0;
-      let valuexr = xr.toString();
-      let valuexm = xm.toString();
-      fXr = evaluate([variable[0] + "=" + valuexr, Equation]);
-      fXm = evaluate([variable[0] + "=" + valuexm, Equation]);
-      iter++;
-      console.log("FXR", fXr);
-      console.log("FXM", fXm);
-      if (typeof fXr[fXr.length - 1] === "object") {
-        fXr[fXr.length - 1] = fXr[fXr.length - 1].im;
-      }
-      if (typeof fXm[fXm.length - 1] === "object") {
-        fXm[fXm.length - 1] = fXm[fXm.length - 1].im;
-      }
-      if (fXm[fXm.length - 1] * fXr[fXr.length - 1] > 0) {
-        ea = error(xr, xm);
-        obj = {
-          iteration: iter,
-          Xl: xl,
-          Xm: xm,
-          Xr: xr,
-          err: ea,
-        };
-        data.push(obj);
-        xr = xm;
-      } else if (fXm[fXm.length - 1] * fXr[fXr.length - 1] <= 0) {
-        ea = error(xl, xm);
-        obj = {
-          iteration: iter,
-          Xl: xl,
-          Xm: xm,
-          Xr: xr,
-          err: ea,
-        };
-        data.push(obj);
-        xl = xm;
-      }
-      console.log(iter, " ea = ", ea);
-    } while (ea > e);
-    N = xm;
-    console.log("obj=", obj);
-  };
   const gotoCal = () => {
     const xlnum = parseFloat(XL);
     const xrnum = parseFloat(XR);
-    Cal(xlnum, xrnum);
+    const { re_data, New_N } = Cal(xlnum, xrnum, Equation, variable);
+    data = re_data;
+    N = New_N;
     console.log("Input xl xr ", xlnum, xrnum);
     setTable(Resulttable());
     try {

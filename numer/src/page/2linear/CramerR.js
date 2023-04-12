@@ -14,6 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { det } from "mathjs";
+import { Calcra } from "./calcra";
 
 ChartJS.register(
   CategoryScale,
@@ -108,8 +109,31 @@ const CramerR = () => {
     datamatrix.push({ a: array_a, b: array_b });
   };
 
-  const Cal = () => {
-    console.log("niceeiei");
+  // const Cal = (allarray_a, allarray_b) => {
+  //   console.log("niceeiei");
+  //   console.log("numtable", numtable2);
+  //   console.log("allarray_a", allarray_a);
+  //   console.log("allarray_b", allarray_b);
+  //   let valuedetA = det(allarray_a);
+  //   console.log("valuedetA", valuedetA);
+
+  //   let temp = [];
+  //   answer = [];
+  //   for (let i = 0; i < numtable2; i++) {
+  //     temp = [];
+  //     for (let j = 0; j < numtable2; j++) {
+  //       temp.push(allarray_a[j][i]);
+  //       allarray_a[j][i] = allarray_b[j];
+  //     }
+  //     answer.push({ I: i, answer: det(allarray_a) / valuedetA });
+  //     for (let j = 0; j < numtable2; j++) {
+  //       allarray_a[j][i] = temp[j];
+  //     }
+  //   }
+  //   console.log("answer = ", answer);
+  // };
+
+  const gotoCal = () => {
     let allarray_a = [];
     let allarray_b = [];
 
@@ -122,30 +146,10 @@ const CramerR = () => {
         );
       }
     }
-    console.log("numtable", numtable2);
-    console.log("allarray_a", allarray_a);
-    console.log("allarray_b", allarray_b);
-    let valuedetA = det(allarray_a);
-    console.log("valuedetA", valuedetA);
 
-    let temp = [];
-    answer = [];
-    for (let i = 0; i < numtable2; i++) {
-      temp = [];
-      for (let j = 0; j < numtable2; j++) {
-        temp.push(allarray_a[j][i]);
-        allarray_a[j][i] = allarray_b[j];
-      }
-      answer.push({ I: i, answer: det(allarray_a) / valuedetA });
-      for (let j = 0; j < numtable2; j++) {
-        allarray_a[j][i] = temp[j];
-      }
-    }
-    console.log("answer = ", answer);
-  };
-
-  const gotoCal = () => {
-    Cal();
+    console.log(allarray_a, allarray_b);
+    const { new_answer } = Calcra(allarray_a, allarray_b, numtable2);
+    answer = new_answer;
     console.log("answer2 = ", answer);
     setTable(Resulttable());
   };

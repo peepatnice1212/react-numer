@@ -1,158 +1,104 @@
-import { inv, multiply } from "mathjs";
+import { evaluate } from "mathjs";
 import React, { useState } from "react";
-import styled from "styled-components";
 
 const Test = () => {
-  let arr_x = [];
-  let arr_y = [];
-  let answer = 0;
   let giventable = [];
+  const [Equation, setEquation] = useState("4x^2+5");
+  let Num = 0;
   const [table, setTable] = useState();
-  const [answerall, setAnswerall] = useState();
 
-  const inputnum = (e) => {
-    let numgen = e.target.value;
-    console.log(`numgen: ${numgen}`);
-    createtable(numgen);
-    setTable(result_table());
+  const inputequ = (e) => {
+    setEquation(e.target.value);
   };
 
-  const createtable = (numgen) => {
-    let table_x = [];
-    let table_y = [];
-    for (let i = 0; i < numgen; i++) {
-      table_x.push(
+  const inputnum = (e) => {
+    Num = parseInt(e.target.value);
+    createtable(Num);
+    setTable(resultttable());
+  };
+
+  const createtable = (Num) => {
+    let tablex = [];
+    let tabley = [];
+    for (let i = 0; i < Num; i++) {
+      tablex.push(
         <div>
-          <input type="text" placeholder={"x" + (i + 1)} id={"rowx" + i} />
+          <input
+            style={{ marginLeft: "30px" }}
+            placeholder={"value x" + (i + 1)}
+            id={"rowx" + i}
+            value={i + 1}
+          />
         </div>
       );
-      table_y.push(
+      tabley.push(
         <div>
-          <input type="text" placeholder={"fx" + (i + 1)} id={"rowy" + i} />
+          <input placeholder={"result" + (i + 1)} id={"rowy" + i} />
         </div>
       );
     }
-    giventable.push({ x: table_x, y: table_y });
+    giventable.push({ x: tablex, y: tabley });
   };
 
-  const result_table = () => {
+  const resultttable = () => {
     console.log(giventable);
     return (
-      <MAIN>
-        {giventable.map((data) => {
-          return (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div>{data.x}</div>
-              <div>{data.y}</div>
-            </div>
-          );
-        })}
-        <input type="button" value={"calculate"} onClick={gotocal} />
-      </MAIN>
+      <div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div>
+            {giventable.map((data) => {
+              return <div>{data.x}</div>;
+            })}
+          </div>
+          <div>
+            {giventable.map((data) => {
+              return <div id="myInput">{data.y}</div>;
+            })}
+          </div>
+        </div>
+      </div>
     );
   };
 
   const gotocal = () => {
-    let numgen = parseInt(document.getElementById("N").value);
-    let m = parseInt(document.getElementById("M").value);
-    let X = parseInt(document.getElementById("X").value);
-    cal(numgen, m, X);
-    setAnswerall(showresult());
+    Num = parseInt(document.getElementById("Num").value);
+    Cal(Num);
   };
 
-  const cal = (numgen, m, X) => {
-    console.log(numgen);
-    console.log(m + 1);
-    let sumx = new Array(2 * m).fill(0);
-    let sumy = new Array(m + 1).fill(0);
-    let matrix_x = new Array(m + 1);
-    let matrix_y = new Array(m + 1);
-    let matrix_ans = [];
-
-    for (let i = 0; i < numgen; i++) {
-      arr_x[i] = document.getElementById("rowx" + i).value;
-      arr_y[i] = document.getElementById("rowy" + i).value;
-      for (let j = 1; j <= sumx.length; j++) {
-        sumx[j - 1] += Math.pow(arr_x[i], j);
-      }
-      for (let k = 0; k < sumy.length; k++) {
-        sumy[k] += arr_y[i] * Math.pow(arr_x[i], k);
-      }
+  // let N = [];
+  let ans = [];
+  const Cal = (Num) => {
+    console.log("CAL");
+    // console.log(document.getElementById("rowx" + 2).value);
+    // for (let i = 0; i < Num; i++) {
+    //   N[i] = parseInt(document.getElementById("rowx" + i).value);
+    // }
+    // console.log(N);
+    for (let i = 0; i < Num; i++) {
+      let scope = {
+        x: i + 1,
+      };
+      ans[i] = evaluate(Equation, scope);
     }
-    console.log(sumx);
-    console.log(sumy);
-
-    for (let i = 0; i < m + 1; i++) {
-      matrix_x[i] = new Array(m + 1);
+    console.log(ans);
+    for (let i = 0; i < Num; i++) {
+      document.getElementById("rowy" + i).value = ans[i];
     }
-
-    for (let i = 0; i < m + 1; i++) {
-      if (i === 0) {
-        matrix_x[i][i] = numgen;
-      }
-      for (let j = 0; j < i + 1; j++) {
-        if (i === 0) {
-          continue;
-        } else {
-          matrix_x[i][j] = sumx[j + i - 1];
-          matrix_x[j][i] = sumx[j + i - 1];
-        }
-      }
-      matrix_y[i] = sumy[i];
-    }
-    console.log(matrix_x, matrix_y);
-
-    matrix_x = inv(matrix_x);
-    console.log(matrix_x);
-    matrix_ans = multiply(matrix_x, matrix_y);
-    console.log(matrix_ans);
-
-    if (answer === 0) {
-      for (let i = 0; i < matrix_ans.length; i++) {
-        answer += matrix_ans[i] * Math.pow(X, i);
-      }
-    }
-
-    console.log(answer);
-  };
-
-  const showresult = () => {
-    return (
-      <MAIN>
-        <Answer>Answer = {answer}</Answer>
-      </MAIN>
-    );
   };
 
   return (
-    <MAIN>
-      M = <Input placeholder="0" id="M" />
+    <div>
+      input Equation
+      <input type="text" onChange={inputequ} value={Equation} />
       <br />
-      X = <Input placeholder="0" id="X" />
+      input num
+      <input type="text" id="Num" onChange={inputnum} />
       <br />
-      Numer of given = <Input placeholder="0" onChange={inputnum} id="N" />
       {table}
-      {answerall}
-    </MAIN>
+      <br />
+      <input type="button" value={"cal"} onClick={gotocal} />
+    </div>
   );
 };
 
 export default Test;
-
-const MAIN = styled.div`
-  text-align: center;
-  font-size: x-large;
-  margin-top: 30px;
-`;
-
-const Input = styled.input`
-  font-size: large;
-  margin-left: 20px;
-  margin-bottom: 20px;
-`;
-
-const Answer = styled.div`
-  font-size: xx-large;
-  color: red;
-  font-weight: bold;
-`;

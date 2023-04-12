@@ -15,7 +15,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import axios from "axios";
 
 ChartJS.register(
   CategoryScale,
@@ -69,8 +68,8 @@ const FalsePo = () => {
             }
           </style>
         </Helmet>
-        <Answer>Answer = {N.toPrecision(7)}</Answer>
-        <table class="center">
+        <Answer data-testid="ans">Answer = {N.toPrecision(7)}</Answer>
+        <table className="center">
           <thead>
             <tr>
               <th>Iteration</th>
@@ -84,7 +83,7 @@ const FalsePo = () => {
             {data.map((data, index) => {
               if (index < 100) {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>{data.iteration}</td>
                     <td>{data.Xl}</td>
                     <td>{data.Xm}</td>
@@ -96,26 +95,10 @@ const FalsePo = () => {
             })}
           </tbody>
         </table>
-        <Line data={dataxxx} />
+        {/* <Line data={dataxxx} /> */}
       </div>
     );
   };
-
-  const [listback, setListback] = useState([]);
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/equations");
-        console.log(res);
-        setListback(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAll();
-  }, []);
-
-  const [fxadd, setFxadd] = useState();
 
   const [table, setTable] = useState();
   const [Equation, setEquation] = useState("");
@@ -195,16 +178,10 @@ const FalsePo = () => {
     Cal(xlnum, xrnum);
     console.log("Input xl xr ", xlnum, xrnum);
     setTable(Resulttable());
-    try {
-      axios.post("http://localhost:8800/equations", fxadd);
-    } catch (err) {
-      console.log(err);
-    }
   };
   const inputEquation = (event) => {
     console.log(event.target.value);
     setEquation(event.target.value);
-    setFxadd({ fx: event.target.value });
   };
 
   const inputXL = (event) => {
@@ -232,37 +209,38 @@ const FalsePo = () => {
             <Input
               type={"text"}
               value={Equation}
+              id="Equation"
+              data-testid="Equation"
               onChange={inputEquation}
             ></Input>
-            Guide f(x)
-            <select style={{ marginLeft: "10px" }} onChange={handlefx}>
-              {listback.map((data) => {
-                return <option value={data.fx}>{data.fx}</option>;
-              })}
-            </select>
           </Label>
           <Label>
             Input xl
-            <Input type={"text"} onChange={inputXL}></Input>
+            <Input
+              type={"text"}
+              onChange={inputXL}
+              id="XL"
+              data-testid="XL"
+            ></Input>
           </Label>
           <Label>
             Input xr
-            <Input type={"text"} onChange={inputXR} id="myInput"></Input>
+            <Input
+              type={"text"}
+              onChange={inputXR}
+              id="XR"
+              data-testid="XR"
+            ></Input>
           </Label>
         </Textinput>
-        <ButTon onClick={gotoCal} id="myBtn">
-          <CaretRightOutlined />
-          Calculate
-          <CaretLeftOutlined />
-        </ButTon>
+        <input
+          type="button"
+          value={"Calculate"}
+          onClick={gotoCal}
+          id="myBtn"
+          data-testid="myBtn"
+        />
       </Form>
-      <Helmet>
-        <script>
-          {
-            "var input = document.getElementById('myInput');input.addEventListener('keypress', function (event) {if (event.key === 'Enter') {event.preventDefault();document.getElementById('myBtn').click();}});"
-          }
-        </script>
-      </Helmet>
       {table}
     </Main>
   );
