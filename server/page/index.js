@@ -1,11 +1,9 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+const express = require("express");
+const cors = require("cors");
+const mysql = require("mysql2");
+const jwt = require("jsonwebtoken");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../swagger.json");
-import express from "express";
-import cors from "cors";
-import mysql from "mysql2";
-import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(cors());
@@ -13,19 +11,19 @@ app.use(express.json());
 
 const secretKeys = "peepatnice";
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-});
-
 // const db = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   database: "nicedb",
-//   password: "peepatnice1212",
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   database: process.env.DB_NAME,
+//   password: process.env.DB_PASSWORD,
 // });
+
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  database: "nicedb",
+  password: "peepatnice1212",
+});
 
 app.get("/gettoken/:name", (req, res) => {
   console.log(req.params.name);
@@ -44,6 +42,16 @@ app.get("/", (req, res) => {
       [1, 3, 1, 2, 5, 3, 4, 15],
     ],
     y: [4, -5, -6, 0, -1, -7, -20, 50],
+  });
+});
+
+app.get("/equation", (req, res) => {
+  console.log("auth passs");
+  const q = "SELECT * FROM equations order by idequations desc LIMIT 20";
+  db.query(q, (err, data) => {
+    if (err) return res.json(err);
+    console.log("datasucceeded");
+    return res.json(data);
   });
 });
 
@@ -148,3 +156,5 @@ app.post("/test", (req, res) => {
 app.listen(8800, () => {
   console.log(`connect! port`);
 });
+
+module.exports = app;

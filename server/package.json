@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon page/index.js",
     "swagger": "node swagger.js"
   },
@@ -23,9 +22,11 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.2.0",
     "nodemon": "^2.0.22",
+    "supertest": "^6.3.3",
     "swagger-autogen": "^2.23.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "yamljs": "^0.3.0"
-  }
+  },
+  "devDependencies": {}
 }
