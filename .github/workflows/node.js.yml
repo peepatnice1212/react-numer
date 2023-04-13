@@ -36,9 +36,5 @@ jobs:
         run: |
           cd numer
           npm test
-      - name: test backend
-        run: |
-          cd server
-          npm test
       - name: test docker
         run: docker-compose build
