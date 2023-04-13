@@ -17,12 +17,6 @@ services:
       - "8800:8800"
     depends_on:
       - db
-    environment:
-      DB_HOST: db
-      DB_USER: root
-      DB_PASSWORD: peepatnice1212
-      DB_NAME: nicedb
-      DB_PORT: 3307
 
   app:
     build: ./numer
