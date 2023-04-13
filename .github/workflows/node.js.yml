@@ -34,6 +34,6 @@ jobs:
       - name: test backend
         run: |
           cd server
-          npm test -- --detectOpenHandles
+          npm test
       - name: test docker
         run: docker-compose build
