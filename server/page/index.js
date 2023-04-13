@@ -11,19 +11,19 @@ app.use(express.json());
 
 const secretKeys = "peepatnice";
 
-// const db = mysql.createPool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   database: process.env.DB_NAME,
-//   password: process.env.DB_PASSWORD,
-// });
-
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  database: "nicedb",
-  password: "peepatnice1212",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
 });
+
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   database: "nicedb",
+//   password: "peepatnice1212",
+// });
 
 app.get("/gettoken/:name", (req, res) => {
   console.log(req.params.name);
